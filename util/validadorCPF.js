@@ -2,23 +2,23 @@
 module.exports = class ValidadorCPF {
 
      /**
-     * Função responsável por limpar o CPF
+     * Função responsável retirar a formatação do CPF.
      * @example
-     * // returns 42337502007
      * limpaCPF(423.375.020-07);
+     * // retorna 42337502007
      * @returns {string} Retorna o CPF sem formatação.
-     * @param {string} cpf
+     * @param {any} cpf
      */
     static limpaCPF(cpf) {
-        return cpf ? cpf.replace(/[^\d]+/g, '') : '';
+        return cpf ? `${cpf}`.replace(/[^\d]+/g, '') : '';
     }
 
     /**
      * Função responsável pela validação de CPF.
      * Retorna true se o CPF é válido e false se CPF é inválido.
      * @example
-     * // returns true
      * ehValido(423.375.020-07);
+     * // retorna true
      * @param {string} cpf
      * @returns {string} return sss
     */
@@ -27,16 +27,17 @@ module.exports = class ValidadorCPF {
             return false;
         }
 
-        let cpfLimpo = this.limpaCPF(cpf);
+        let cpfSemFormatacao = this.limpaCPF(cpf);
+        let cpfSrc = leftPad(cpfSemFormatacao);
 
-        let tamanhoNaoEstahCorreto = cpfLimpo.length !== 11;
-        let cpfEstahNaBlackList = getCPFBlackList().includes(cpfLimpo);
+        let tamanhoNaoEstahCorreto = cpfSrc.length !== 11;
+        let cpfEstahNaBlackList = getCPFBlackList().includes(cpfSrc);
 
         if (tamanhoNaoEstahCorreto || cpfEstahNaBlackList) {
             return false;
         }
 
-        return validadorCPFReceitaFederal(cpfLimpo);
+        return validadorCPFReceitaFederal(cpfSrc);
     }
 
 }
@@ -81,4 +82,12 @@ function getCPFBlackList() {
         "99999999999"
     ];
     return blackList;
+}
+
+function leftPad(cpf, length = 11){
+    let src = cpf ? `${cpf}` : '';
+    while (src.length < length) {
+        src= `0${src}`;
+    }
+    return src;
 }

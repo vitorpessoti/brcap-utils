@@ -82,5 +82,17 @@ describe('validadorCPF', function () {
         it('deve retornar true quando o CPF formatado é válido [423.375.020-07]', function () {
             expect(ValidadorCPF.ehValido('423.375.020-07')).to.be.true;
         });
+
+        it('deve validar um cpf numerico corretamente', function () {
+            expect(ValidadorCPF.ehValido(42337502007)).to.be.true;
+        });
+
+        it('deve validar um cpf numérico que esteja omitindo zeros a esquerda [06735743008]', function () {
+            expect(ValidadorCPF.ehValido(6735743008)).to.be.true;
+        });
+       
+        it('deve validar um cpf numérico que esteja omitindo zeros a esquerda [00311161243]', function () {
+            expect(ValidadorCPF.ehValido(311161243)).to.be.true;
+        });
     });
 });
