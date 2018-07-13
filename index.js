@@ -27,50 +27,29 @@ function limpaCPF(cpf) {
     return ValidadorCPF.limpaCPF(cpf);
 }
 
-/** Função responsável por validar json da fila, buscando arquivo no s3
- * @param  {String} nomeSchema nome do arquivo que esta no bucket 
- * @param  {Json} json
- * @param  {callback} callback
- */
-function validarJsonSqsS3(nomeSchema,json,callback) {
-    validadorJSON.validarJsonSqsS3(nomeSchema,json,function(erro,resultado){
-        callback(erro,resultado);
-    });
-}
 
 /**  Função responsável por validar json da fila, passando arquivo do s3
  * @param  {Json} schema
- * @param  {Json} json
+ * @param  {payload} payload
  * @param  {callback} callback
  */
-function validarJsonSqs(schema,json,callback) {
-    validadorJSON.validarJsonSqs(schema,json,function(erro,resultado){
-        callback(erro,resultado);
+function validateSchemaSqs(schema,payload,callback) {
+    validadorJSON.validateSchemaSqs(schema,payload,function(error,sucess){
+        callback(error,sucess);
     });
 }
 
  
 /** Função responsável por validar json do serviço, buscando arquivo no s3
- * @param  {String} nomeSchema nome do arquivo que esta no bucket 
- * @param  {Json} json json a ser validado
- * @param  {String} recurso nome do recurso do serviço, exemplo: registros-venda-bb
- * @param  {String} metodoHttp exemplo: POST, GET, PUT
+ * @param  {String} schema nome do arquivo que esta no bucket 
+ * @param  {payload} payload json a ser validado
+ * @param  {String} resource nome do recurso do serviço, exemplo: registros-venda-bb
+ * @param  {String} httpMethod exemplo: POST, GET, PUT
  * @param  {callback} callback
  */
-function validarJsonServiceS3(nomeSchema,json, recurso,metodoHttp,callback) {
-    validadorJSON.validarJsonServiceS3(nomeSchema,json, recurso,metodoHttp,function(erro,resultado){
-        callback(erro,resultado);
-    });
-}
-
-/** Função responsável por validar json do serviço, passando arquivo do s3
- * @param  {Json} jsonAValidar
- * @param  {Json} jsonContrato
- * @param  {callback} callback
- */
-function validarJsonService(jsonAValidar, jsonContrato,callback) {
-    validadorJSON.validarJsonService(jsonAValidar, jsonContrato,function(erro,resultado){
-        callback(erro,resultado);
+function validateSchemaService(schema,payload, resource,httpMethod,callback) {
+    validadorJSON.validateSchemaService(nomeSchema,payload, resource,httpMethod,function(error,sucess){
+        callback(error,sucess);
     });
 }
 
@@ -78,8 +57,6 @@ function validarJsonService(jsonAValidar, jsonContrato,callback) {
 module.exports = {
     cpfEhValido : cpfEhValido,
     limpaCPF : limpaCPF,
-    validarJsonSqsS3 : validarJsonSqsS3,
-    validarJsonSqs : validarJsonSqs,
-    validarJsonServiceS3 : validarJsonServiceS3,
-    validarJsonService : validarJsonService
+    validateSchemaSqs : validateSchemaSqs,
+    validateSchemaService : validateSchemaService
 };

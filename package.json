@@ -13,7 +13,6 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "brcap-aws": "^1.4.4",
     "jsonschema": "^1.2.4"
   }
 }
