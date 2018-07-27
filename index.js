@@ -38,7 +38,6 @@ function validateSchemaSqs(schema,payload,callback) {
         callback(error,sucess);
     });
 }
-
  
 /** Função responsável por validar json do serviço, buscando arquivo no s3
  * @param  {String} schema nome do arquivo que esta no bucket 
@@ -48,11 +47,10 @@ function validateSchemaSqs(schema,payload,callback) {
  * @param  {callback} callback
  */
 function validateSchemaService(schema,payload, resource,httpMethod,callback) {
-    validadorJSON.validateSchemaService(nomeSchema,payload, resource,httpMethod,function(error,sucess){
+    validadorJSON.validateSchemaService(schema,payload, resource,httpMethod,function(error,sucess){
         callback(error,sucess);
     });
 }
-
 
 module.exports = {
     cpfEhValido : cpfEhValido,
