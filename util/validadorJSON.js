@@ -13,9 +13,17 @@ module.exports = class validadorJSON {
      * @param  {callback} callback
      */
     static validateSchemaSqs(schema,payload, callback) {
-        validateJsonSchema(schema,payload, function (erro, resultado) {
-            callback(erro, resultado);
-        });
+
+        var listValidacao = validarRequestSchemaSqs(schema,payload);
+        if(listValidacao.length == 0){
+            validateJsonSchema(schema,payload, function (erro, resultado) {
+                callback(erro, resultado);
+            });
+        }else{
+            callback(listValidacao,null );
+        }
+        
+       
     };
 
  
@@ -28,9 +36,17 @@ module.exports = class validadorJSON {
      * @param  {} callback
      */
     static validateSchemaService(schema,payload, resource,httpMethod, callback) {
-        validarArquivo(schema,payload, resource,httpMethod, function (erro, resultado) {
-            callback(erro, resultado);
-        });
+
+        var listValidacao = validarValidateSchemaService(schema,payload, resource,httpMethod);
+          if(listValidacao.length == 0){
+            validarArquivo(schema,payload, resource,httpMethod, function (erro, resultado) {
+                callback(erro, resultado);
+            });
+        }else{
+            callback(listValidacao,null );
+        }
+
+       
     };
 }
 
@@ -76,3 +92,36 @@ function validateJsonSchema(payload, schema, callback) {
         callback(null, []);
     }
 }
+
+function validarValidateSchemaService(schema,payload, resource,httpMethod){
+    var message = [];
+    return message.concat(validaNotEmpty(schema),
+                   validaNotEmpty(payload),
+                   validaNotEmpty(resource),
+                   validaNotEmpty(httpMethod));
+ 
+};
+
+
+
+function validarRequestSchemaSqs(schema,payload){
+    var message = [];
+    return message.concat(validaNotEmpty(schema),
+            validaNotEmpty(payload));
+ };
+
+
+
+
+function validaNotEmpty(schema) {
+     msg = [];
+
+    if (!schema) {
+        const varToString = schema => Object.keys(schema)[0];
+        const displayName = varToString({schema})
+        msg.push({campo: displayName, mensagem:'não informado.'});
+       
+    }
+
+    return msg;
+};
