@@ -72,7 +72,7 @@ function validarArquivo(schema,payload, resource,httpMethod,callback) {
 }
 
 
-function validateJsonSchema(payload, schema, callback) {
+function validateJsonSchema(schema, payload, callback) {
 
     if (validator.validate(payload, schema).errors.length > 0) {
 
@@ -82,10 +82,10 @@ function validateJsonSchema(payload, schema, callback) {
             const error = listaErros.map(
                 error => error.schema.message[error.name]
             )
-            callback(null, error);
+            callback(error,null);
         } catch (error) {
             console.log('Erro ao recuperar lista de mensagem ', error);
-            callback(null, listaErros);
+            callback(listaErros,null );
         }
 
     } else {
