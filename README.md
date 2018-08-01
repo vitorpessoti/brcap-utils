@@ -29,6 +29,7 @@ Callback (erro, resultado):
     resultado: data do próximo dia útil com o tipo string no formato 'YYYY-MM-DD' se não houver erro ou null se houver erro.
 
 Exemplo de utilização:
+    
     function obterProximoDiaUtil(req, res) {
         const Util = require('brcap-utils');
         Util.getProximoDiaUtil('2018-02-09', 2,
