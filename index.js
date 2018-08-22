@@ -7,6 +7,8 @@ const DiaUtil = require("./util/diaUtil.js");
 const moment = require('moment');
 const ValidadorDTO = require('./dto/ValidadorDTO');
 
+const BancosFebraban = require('./util/bancosFebraban.js');
+
 /**
  * Função responsável pela validação de CPF.
  * Retorna true se o CPF é válido e false se CPF é inválido.
@@ -182,6 +184,32 @@ function validaNumeric(nomeCampo, valorCampo) {
     return msg;
 }
 
+function buscaBancoFebraban(tableName, region, callback) {
+    
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+            TableName: tableName,
+            region: region
+    };
+    var items = []
+    var scanExecute = function(callback) {
+        docClient.scan(params,function(err,result) {
+            if(err) {
+                callback(err);
+            } else {
+                items = items.concat(result.Items);
+                if(result.LastEvaluatedKey) {
+                    params.ExclusiveStartKey = result.LastEvaluatedKey;
+                    scanExecute(callback);
+                } else {
+                    callback(err,items);
+                }
+            }
+        });
+    }
+    scanExecute(callback);
+};
+
 module.exports = {
     cpfEhValido: cpfEhValido,
     limpaCPF: limpaCPF,
@@ -190,5 +218,6 @@ module.exports = {
     getProximoDiaUtil: getProximoDiaUtil,
     validaNotEmpty: validaNotEmpty,
     validaData: validaData,
-    validaNumeric: validaNumeric
+    validaNumeric: validaNumeric,
+    buscaBancoFebraban:buscaBancoFebraban
 };
