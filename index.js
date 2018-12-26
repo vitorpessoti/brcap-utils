@@ -1,4 +1,5 @@
 const ValidadorCPF = require("./util/validadorCPF.js");
+const ValidadorCNPJ = require('./util/validadorCNPJ');
 
 const validadorJSON = require("./util/validadorJSON.js");
 
@@ -22,6 +23,18 @@ function cpfEhValido(cpf) {
     return ValidadorCPF.ehValido(cpf);
 }
 
+/**
+ * Função responsável pela validação de CNPJ.
+ * Retorna true se o CNPJ é válido e false se o CNPJ é inválido.
+ * @example
+ * // returns true
+ * Util.isCnpjValido('00.000.000/0001-91');
+ * @param {string} cnpj
+ * @returns {boolean}
+*/
+function isCnpjValido(cnpj) {
+    return ValidadorCNPJ.isCnpjValido(cnpj);
+}
 /**
  * Função responsável por limpar CPF
  * @example
@@ -219,5 +232,6 @@ module.exports = {
     validaNotEmpty: validaNotEmpty,
     validaData: validaData,
     validaNumeric: validaNumeric,
-    buscaBancoFebraban:buscaBancoFebraban
+    buscaBancoFebraban:buscaBancoFebraban,
+    isCnpjValido: isCnpjValido
 };
