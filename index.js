@@ -117,6 +117,24 @@ function getProximoDiaUtil(data, numeroDias, tableNameFeriado, region, callback)
     });
 }
 
+function getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, callback) {
+    validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, resultado) => {
+        if (error) {
+            callback(error, resultado);
+        } else {
+            DiaUtil.getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, (error, proximoDiaUtil) => {
+                if (error) {
+                    callback(error, null);
+                } else {
+                    callback(null, proximoDiaUtil);
+                }
+            });
+        }
+    });
+}
+
+
+
 /**
  * Função valida se os parâmetros para calcular o próximo dia útil estão com os tipos esperados.
  * @param {string} data data inicial
@@ -229,6 +247,7 @@ module.exports = {
     validateSchemaSqs: validateSchemaSqs,
     validateSchemaService: validateSchemaService,
     getProximoDiaUtil: getProximoDiaUtil,
+    getProximoDiaUtilDecendio: getProximoDiaUtilDecendio,
     validaNotEmpty: validaNotEmpty,
     validaData: validaData,
     validaNumeric: validaNumeric,
