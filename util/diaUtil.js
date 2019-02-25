@@ -58,6 +58,30 @@ module.exports = class DiaUtil {
         });
 
     }
+
+    static getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, callback) {
+        let proximoDiaUtil = momentBusinessDay(data, 'YYYY-MM-DD');
+        let contadorDiasUteis = 0;
+        sync.fiber(function () {
+            while (contadorDiasUteis < parseInt(numeroDias)) {
+                proximoDiaUtil.nextBusinessDay();
+
+                if (!sync.await(verificaFeriado(proximoDiaUtil.format('YYYY-MM-DD'), tableNameFeriado, region, sync.defer()))) {
+                    contadorDiasUteis++
+                }
+            }
+            return proximoDiaUtil.format('YYYY-MM-DD');
+        }, function (error, resultado) {
+            if (error) {
+                callback({
+                    statusCode: error.statusCode ? error.statusCode : 500,
+                    mensagem: error.stack ? error.stack : error
+                }, null);
+            } else {
+                callback(null, resultado);
+            }
+        });
+    }
 }
 
 /**
