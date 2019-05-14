@@ -3,14 +3,13 @@ try {
   const appDir = __dirname.replace(/node_modules\/brcap-utils\/util/g, '');
   config = require(`${appDir}config/log.json`);
 } catch (e) {
-  config = { state: 'production', endCleanAfter: 30000 };
+  config = { state: 'production' };
 }
 
 class Log {
   constructor(script = 'NO SCRIPT DEFINED') {
     this.script = script;
     this.state = config.state ? config.state : 'prodcution';
-    this.endCleanAfter = config.endCleanAfter;
     this.id = Date.now();
     global[`BRCAPUTILSELOGERROR${this.id}`] = [];
   }

@@ -9,6 +9,7 @@ const moment = require('moment');
 const ValidadorDTO = require('./dto/ValidadorDTO');
 
 const BancosFebraban = require('./util/bancosFebraban.js');
+const Log = require('./util/Log');
 
 /**
  * Função responsável pela validação de CPF.
