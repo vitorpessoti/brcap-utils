@@ -241,6 +241,22 @@ function buscaBancoFebraban(tableName, region, callback) {
     scanExecute(callback);
 };
 
+// LOG
+/**
+ * Fuçao responsável pelos console.logs
+ * crie um config em AppRoot/config/log.json -> { state: 'production', endCleanAfter: 30000 }
+ * Use state:production para production para produção
+ * Use state:developement para desenvolvimento ou utilze env (NODE_ENV === development) para desenvolvimento
+ * Expl:
+ * const { Log } = require('brcap-utils);
+ * const log  = new Log('Nome do script ou função');
+ * log.info('Algo muito importante');   // <-- log.info vai sempre logar tanto em dev com em prd
+ * log.debug('Algo muito importante');  // <-- log.debug registra um log.debug / dev vai printar imediatamente
+ * log.error('Ocorreu um erro');        // <-- log.error vai loggar todos os log.debug registrados e o log.error
+ * Passe adiante o objeto "log" (expl: minhaFuncao(arg1, arg2, log)) para manter os registros do log juntos
+ * @param {any} NomeScriptouFuncao
+ */
+
 module.exports = {
     cpfEhValido: cpfEhValido,
     limpaCPF: limpaCPF,
@@ -252,5 +268,6 @@ module.exports = {
     validaData: validaData,
     validaNumeric: validaNumeric,
     buscaBancoFebraban:buscaBancoFebraban,
-    isCnpjValido: isCnpjValido
+    isCnpjValido: isCnpjValido,
+    Log: Log
 };
