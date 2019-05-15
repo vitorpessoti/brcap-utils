@@ -14,19 +14,28 @@ class Log {
     global[`BRCAPUTILSELOGERROR${this.id}`] = [];
   }
 
+  check() {
+    return !!(process.env.NODE_ENV === 'development' || this.state === 'development');
+  }
+
   build(type) {
     const date = new Date().toISOString().replace(/T/g, ' ').replace(/Z/g, '');
-    const types = {
+    let types = {
       info: `\x1b[32m[INFO]\x1b[0m ${date} \x1b[32m${this.script ? `[${this.script}]` : ''} >> \x1b[0m`,
       debug: `\x1b[36m[DEBUG]\x1b[0m ${date} \x1b[36m${this.script ? `[${this.script}]` : ''} >> \x1b[0m`,
       error: `\x1b[31m[ERROR]\x1b[0m ${date} \x1b[31m${this.script ? `[${this.script}]` : ''} >> \x1b[0m`
     };
+    
+    if (!this.check()) {
+
+      types = {
+        info: `[INFO] ${date} ${this.script ? `[${this.script}]` : ''} >> `,
+        debug: `[DEBUG] ${date} ${this.script ? `[${this.script}]` : ''} >> `,
+        error: `[ERROR] ${date} ${this.script ? `[${this.script}]` : ''} >> `
+      };
+    }
 
     return [types[type]];
-  }
-
-  check() {
-    return !!(process.env.NODE_ENV === 'development' || this.state === 'development');
   }
 
   info(...args) {
