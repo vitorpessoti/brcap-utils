@@ -11,6 +11,30 @@ const ValidadorDTO = require('./dto/ValidadorDTO');
 const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
 
+DiaUtil.getProximoDiaUtil('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
+
+    console.log('getProximoDiaUtil1', data);
+});
+
+DiaUtil.getProximoDiaUtil2('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
+    
+    console.log('getProximoDiaUtil2', data);
+});
+
+
+
+DiaUtil.getProximoDiaUtilDecendio('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
+    
+    console.log('getProximoDiaUtilDecendio', data);
+});
+
+DiaUtil.getProximoDiaUtilDecendio2('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
+    
+    console.log('getProximoDiaUtilDecendio', data);
+});
+
+return;
+
 /**
  * Função responsável pela validação de CPF.
  * Retorna true se o CPF é válido e false se CPF é inválido.
