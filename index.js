@@ -1,39 +1,15 @@
-const ValidadorCPF = require("./util/validadorCPF.js");
+const moment = require('moment');
+const ValidadorCPF = require('./util/validadorCPF.js');
 const ValidadorCNPJ = require('./util/validadorCNPJ');
 
-const validadorJSON = require("./util/validadorJSON.js");
+const validadorJSON = require('./util/validadorJSON.js');
 
-const DiaUtil = require("./util/diaUtil.js");
+const DiaUtil = require('./util/diaUtil.js');
 
-const moment = require('moment');
 const ValidadorDTO = require('./dto/ValidadorDTO');
 
 const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
-
-DiaUtil.getProximoDiaUtil('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
-
-    console.log('getProximoDiaUtil1', data);
-});
-
-DiaUtil.getProximoDiaUtil2('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
-    
-    console.log('getProximoDiaUtil2', data);
-});
-
-
-
-DiaUtil.getProximoDiaUtilDecendio('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
-    
-    console.log('getProximoDiaUtilDecendio', data);
-});
-
-DiaUtil.getProximoDiaUtilDecendio2('2018-02-12', 17, 'feriado-dev', 'sa-east-1', (err, data) => {
-    
-    console.log('getProximoDiaUtilDecendio', data);
-});
-
-return;
 
 /**
  * Função responsável pela validação de CPF.
@@ -45,7 +21,7 @@ return;
  * @returns {string}
 */
 function cpfEhValido(cpf) {
-    return ValidadorCPF.ehValido(cpf);
+  return ValidadorCPF.ehValido(cpf);
 }
 
 /**
@@ -58,7 +34,7 @@ function cpfEhValido(cpf) {
  * @returns {boolean}
 */
 function isCnpjValido(cnpj) {
-    return ValidadorCNPJ.isCnpjValido(cnpj);
+  return ValidadorCNPJ.isCnpjValido(cnpj);
 }
 /**
  * Função responsável por limpar CPF
@@ -69,7 +45,7 @@ function isCnpjValido(cnpj) {
  * @param {string} cpf
  */
 function limpaCPF(cpf) {
-    return ValidadorCPF.limpaCPF(cpf);
+  return ValidadorCPF.limpaCPF(cpf);
 }
 
 
@@ -79,29 +55,29 @@ function limpaCPF(cpf) {
  * @param  {callback} callback
  */
 function validateSchemaSqs(schema, payload, callback) {
-    validadorJSON.validateSchemaSqs(schema, payload, function (error, sucess) {
-        callback(error, sucess);
-    });
+  validadorJSON.validateSchemaSqs(schema, payload, (error, sucess) => {
+    callback(error, sucess);
+  });
 }
 
 /** Função responsável por validar json do serviço, buscando arquivo no s3
- * @param  {String} schema nome do arquivo que esta no bucket 
+ * @param  {String} schema nome do arquivo que esta no bucket
  * @param  {payload} payload json a ser validado
  * @param  {String} resource nome do recurso do serviço, exemplo: registros-venda-bb
  * @param  {String} httpMethod exemplo: POST, GET, PUT
  * @param  {callback} callback
  */
 function validateSchemaService(schema, payload, resource, httpMethod, callback) {
-    validadorJSON.validateSchemaService(schema, payload, resource, httpMethod, function (error, sucess) {
-        callback(error, sucess);
-    });
+  validadorJSON.validateSchemaService(schema, payload, resource, httpMethod, (error, sucess) => {
+    callback(error, sucess);
+  });
 }
 
 /**
- * Função responsável por retornar o proximo dia útil a partir de uma data, somando o número de dias desejado. 
- * Deve-se informar os seguintes parâmetros: 
- *      data (data inicial), 
- *      numeroDias (número de dias úteis que será somado a data inicial), 
+ * Função responsável por retornar o proximo dia útil a partir de uma data, somando o número de dias desejado.
+ * Deve-se informar os seguintes parâmetros:
+ *      data (data inicial),
+ *      numeroDias (número de dias úteis que será somado a data inicial),
  *      tableNameFeriado (nome da tabela de feriado no DynamoDB),
  *      region (nome da região que o DynamoDB está localizado na AWS)
  * Retorna no callback, atributo resultado, o próximo dia útil, somando o número de dias desejado, como String no formato 'YYYY-MM-DD'.
@@ -127,37 +103,36 @@ function validateSchemaService(schema, payload, resource, httpMethod, callback) 
  * @param {callback} callback
 */
 function getProximoDiaUtil(data, numeroDias, tableNameFeriado, region, callback) {
-    validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, resultado) => {
+  validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, resultado) => {
+    if (error) {
+      callback(error, resultado);
+    } else {
+      DiaUtil.getProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, proximoDiaUtil) => {
         if (error) {
-            callback(error, resultado);
+          callback(error, null);
         } else {
-            DiaUtil.getProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, proximoDiaUtil) => {
-                if (error) {
-                    callback(error, null);
-                } else {
-                    callback(null, proximoDiaUtil);
-                }
-            });
+          callback(null, proximoDiaUtil);
         }
-    });
+      });
+    }
+  });
 }
 
 function getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, callback) {
-    validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, resultado) => {
+  validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, (error, resultado) => {
+    if (error) {
+      callback(error, resultado);
+    } else {
+      DiaUtil.getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, (error, proximoDiaUtil) => {
         if (error) {
-            callback(error, resultado);
+          callback(error, null);
         } else {
-            DiaUtil.getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, (error, proximoDiaUtil) => {
-                if (error) {
-                    callback(error, null);
-                } else {
-                    callback(null, proximoDiaUtil);
-                }
-            });
+          callback(null, proximoDiaUtil);
         }
-    });
+      });
+    }
+  });
 }
-
 
 
 /**
@@ -169,33 +144,33 @@ function getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, c
  * @param {callback} callback
 */
 function validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, callback) {
-    try {
-        let mensagem = [];
-        let validator = mensagem.concat(
-            validaNotEmpty("data", data),
-            validaNotEmpty("numeroDias", numeroDias),
-            validaNotEmpty("tableNameFeriado", tableNameFeriado),
-            validaNotEmpty("region", region),
+  try {
+    let mensagem = [];
+    let validator = mensagem.concat(
+      validaNotEmpty('data', data),
+      validaNotEmpty('numeroDias', numeroDias),
+      validaNotEmpty('tableNameFeriado', tableNameFeriado),
+      validaNotEmpty('region', region),
 
-            validaData("data", data),
+      validaData('data', data),
 
-            validaNumeric("numeroDias", numeroDias)
-        );
+      validaNumeric('numeroDias', numeroDias),
+    );
 
-        if (validator.length > 0) {
-            callback({
-                statusCode: 400,
-                mensagem: validator
-            }, null);
-        } else {
-            callback(null, null);
-        }
-    } catch (error) {
-        callback({
-            statusCode: error.statusCode ? error.statusCode : 500,
-            mensagem: error.stack ? error.stack : error
-        }, null);
+    if (validator.length > 0) {
+      callback({
+        statusCode: 400,
+        mensagem: validator,
+      }, null);
+    } else {
+      callback(null, null);
     }
+  } catch (error) {
+    callback({
+      statusCode: error.statusCode ? error.statusCode : 500,
+      mensagem: error.stack ? error.stack : error,
+    }, null);
+  }
 }
 
 /**
@@ -205,11 +180,11 @@ function validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, c
  * @returns {array}
 */
 function validaNotEmpty(nomeCampo, valorCampo) {
-    var msg = [];
-    if (valorCampo == null || valorCampo == undefined) {
-        msg.push(new ValidadorDTO("Valor do atributo " + nomeCampo + " não informado."));
-    }
-    return msg;
+  let msg = [];
+  if (valorCampo == null || valorCampo == undefined) {
+    msg.push(new ValidadorDTO(`Valor do atributo ${nomeCampo} não informado.`));
+  }
+  return msg;
 }
 
 /**
@@ -219,11 +194,11 @@ function validaNotEmpty(nomeCampo, valorCampo) {
  * @returns {array}
 */
 function validaData(nomeCampo, valorCampo) {
-    var msg = [];
-    if (valorCampo && (!moment(valorCampo, "YYYY-MM-DD", true).isValid() && !moment(valorCampo, "YYYY-MM-DD HH:mm:ss", true).isValid())) {
-        msg.push(new ValidadorDTO(nomeCampo + " deve ser uma data válida."));
-    }
-    return msg;
+  let msg = [];
+  if (valorCampo && (!moment(valorCampo, 'YYYY-MM-DD', true).isValid() && !moment(valorCampo, 'YYYY-MM-DD HH:mm:ss', true).isValid())) {
+    msg.push(new ValidadorDTO(`${nomeCampo} deve ser uma data válida.`));
+  }
+  return msg;
 }
 
 /**
@@ -233,38 +208,37 @@ function validaData(nomeCampo, valorCampo) {
  * @returns {array}
 */
 function validaNumeric(nomeCampo, valorCampo) {
-    var msg = [];
-    if (valorCampo && isNaN(parseInt(valorCampo))) {
-        msg.push(new ValidadorDTO(nomeCampo + " deve ser numérico."));
-    }
-    return msg;
+  let msg = [];
+  if (valorCampo && isNaN(parseInt(valorCampo))) {
+    msg.push(new ValidadorDTO(`${nomeCampo} deve ser numérico.`));
+  }
+  return msg;
 }
 
 function buscaBancoFebraban(tableName, region, callback) {
-    
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var params = {
-            TableName: tableName,
-            region: region
-    };
-    var items = []
-    var scanExecute = function(callback) {
-        docClient.scan(params,function(err,result) {
-            if(err) {
-                callback(err);
-            } else {
-                items = items.concat(result.Items);
-                if(result.LastEvaluatedKey) {
-                    params.ExclusiveStartKey = result.LastEvaluatedKey;
-                    scanExecute(callback);
-                } else {
-                    callback(err,items);
-                }
-            }
-        });
-    }
-    scanExecute(callback);
-};
+  let docClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: tableName,
+    region,
+  };
+  let items = [];
+  var scanExecute = function (callback) {
+    docClient.scan(params, (err, result) => {
+      if (err) {
+        callback(err);
+      } else {
+        items = items.concat(result.Items);
+        if (result.LastEvaluatedKey) {
+          params.ExclusiveStartKey = result.LastEvaluatedKey;
+          scanExecute(callback);
+        } else {
+          callback(err, items);
+        }
+      }
+    });
+  };
+  scanExecute(callback);
+}
 
 // LOG
 /**
@@ -283,16 +257,16 @@ function buscaBancoFebraban(tableName, region, callback) {
  */
 
 module.exports = {
-    cpfEhValido: cpfEhValido,
-    limpaCPF: limpaCPF,
-    validateSchemaSqs: validateSchemaSqs,
-    validateSchemaService: validateSchemaService,
-    getProximoDiaUtil: getProximoDiaUtil,
-    getProximoDiaUtilDecendio: getProximoDiaUtilDecendio,
-    validaNotEmpty: validaNotEmpty,
-    validaData: validaData,
-    validaNumeric: validaNumeric,
-    buscaBancoFebraban:buscaBancoFebraban,
-    isCnpjValido: isCnpjValido,
-    Log: Log
+  cpfEhValido,
+  limpaCPF,
+  validateSchemaSqs,
+  validateSchemaService,
+  getProximoDiaUtil,
+  getProximoDiaUtilDecendio,
+  validaNotEmpty,
+  validaData,
+  validaNumeric,
+  buscaBancoFebraban,
+  isCnpjValido,
+  Log,
 };
