@@ -134,7 +134,6 @@ function getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, c
   });
 }
 
-
 /**
  * Função valida se os parâmetros para calcular o próximo dia útil estão com os tipos esperados.
  * @param {string} data data inicial
@@ -146,16 +145,7 @@ function getProximoDiaUtilDecendio(data, numeroDias, tableNameFeriado, region, c
 function validaDadosProximoDiaUtil(data, numeroDias, tableNameFeriado, region, callback) {
   try {
     let mensagem = [];
-    let validator = mensagem.concat(
-      validaNotEmpty('data', data),
-      validaNotEmpty('numeroDias', numeroDias),
-      validaNotEmpty('tableNameFeriado', tableNameFeriado),
-      validaNotEmpty('region', region),
-
-      validaData('data', data),
-
-      validaNumeric('numeroDias', numeroDias),
-    );
+    let validator = mensagem.concat(validaNotEmpty('data', data), validaNotEmpty('numeroDias', numeroDias), validaNotEmpty('tableNameFeriado', tableNameFeriado), validaNotEmpty('region', region), validaData('data', data), validaNumeric('numeroDias', numeroDias));
 
     if (validator.length > 0) {
       callback({
