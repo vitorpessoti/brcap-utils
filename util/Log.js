@@ -3,15 +3,16 @@ try {
   const appDir = __dirname.replace(/node_modules\/brcap-utils\/util/g, '');
   config = require(`${appDir}config/log.json`);
 } catch (e) {
-  config = { state: 'production' };
+  // maxLogLength é pra evitar estouro de memória
+  config = { state: 'production', maxLogLength: 100 };
 }
 
 class Log {
   constructor(script = 'NO SCRIPT DEFINED') {
     this.script = script;
-    this.state = config.state ? config.state : 'prodcution';
-    this.id = Date.now();
-    global[`BRCAPUTILSELOGERROR${this.id}`] = [];
+    this.state = config.state ? config.state : 'production';
+    this.maxLogLength = config.maxLogLength;
+    this.log = [];
   }
 
   static check() {
@@ -50,17 +51,19 @@ class Log {
   debug(...args) {
     let log = this.build('debug');
     log = log.concat(args);
+    // esvaziando
+    if (this.log > this.maxLogLength) this.log = [];
     if (Log.check()) return console.log(...log);
-    global[`BRCAPUTILSELOGERROR${this.id}`].push(log);
+    this.log.push(log);
   }
 
   error(...args) {
     let log = this.build('error');
     log = log.concat(args);
-    global[`BRCAPUTILSELOGERROR${this.id}`].map((error) => {
+    this.log.map((error) => {
       console.log(...error);
     });
-    setTimeout(() => global[`BRCAPUTILSELOGERROR${this.id}`] = []);
+    setTimeout(() => this.log = []);
     console.log(...log);
   }
 
