@@ -1,6 +1,6 @@
-let config;
+const appDir = __dirname.replace(/node_modules\/brcap-utils\/util/g, '');
+let config = {};
 try {
-  const appDir = __dirname.replace(/node_modules\/brcap-utils\/util/g, '');
   config = require(`${appDir}config/log.json`);
 } catch (e) {
   // maxLogLength é pra evitar estouro de memória
@@ -10,13 +10,12 @@ try {
 class Log {
   constructor(script = 'NO SCRIPT DEFINED') {
     this.script = script;
-    this.state = config.state ? config.state : 'production';
     this.maxLogLength = config.maxLogLength;
     this.log = [];
   }
 
   static check() {
-    return !!(process.env.NODE_ENV === 'development' || this.state === 'development');
+    return (process.env.NODE_ENV === 'development' || config.state === 'development');
   }
 
   static getDate() {
@@ -63,7 +62,7 @@ class Log {
     this.log.map((error) => {
       console.log(...error);
     });
-    setTimeout(() => this.log = []);
+    this.log = [];
     console.log(...log);
   }
 
