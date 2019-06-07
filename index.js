@@ -1,16 +1,12 @@
 const moment = require('moment');
 const ValidadorCPF = require('./util/validadorCPF.js');
 const ValidadorCNPJ = require('./util/validadorCNPJ');
-
 const validadorJSON = require('./util/validadorJSON.js');
-
 const DiaUtil = require('./util/diaUtil.js');
-
 const ValidadorDTO = require('./dto/ValidadorDTO');
-
 const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
-
+const BRMath = require('./util/Math');
 /**
  * Função responsável pela validação de CPF.
  * Retorna true se o CPF é válido e false se CPF é inválido.
@@ -246,6 +242,19 @@ function buscaBancoFebraban(tableName, region, callback) {
  * @param {any} NomeScriptouFuncao
  */
 
+
+// BRMath
+/**
+ * let a = 600.90 * 3; // result 1802.6999999999998 // round 1802.7
+ * let b = 200.30 * 3; // result 600.9000000000001  // round 600.9
+ * let c = 261.65;     // result 261.65             // round 26.65
+ * let d = 261.61 * 3; // result 784.83             // round 784.83
+ * expl: BRMath.round(600.90 * 3);
+ * expl: BRMath.round(600.90 * 3, 5);
+ * @param {number} value
+ * @param {integer} decimals (opcinal, default 2)
+ */
+
 module.exports = {
   cpfEhValido,
   limpaCPF,
@@ -259,4 +268,5 @@ module.exports = {
   buscaBancoFebraban,
   isCnpjValido,
   Log,
+  BRMath,
 };

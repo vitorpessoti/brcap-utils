@@ -1,3 +1,4 @@
+const { Dynamo_Put } = require('brcap-aws');
 const appDir = __dirname.replace(/node_modules\/brcap-utils\/util/g, '');
 let config = {};
 try {
@@ -72,6 +73,20 @@ class Log {
     const matchs = String(args[0] || '').match(reg);
     if (matchs.length < 2) return;
     console.log(`\x1b[32m[SEQUELIZE]\x1b[0m ${Log.getDate()} \x1b[32m[${matchs[1]}] >> \x1b[0m\x1b[33m${matchs[2]}\x1b[0m`);
+  }
+  // expl: Log.logDynamo('pgt-erros-dev', 'sa-east-1', { processo: "pgt-regra-pgto-prd", timestamp: Date.now(), desc: "descrição do seu erro", item: { seuItem: "item" }});
+  // não retorna nada, vai tentar 3 vzs incluri seu erro
+  // vai deixar logs em caso de não consegui
+  static logDynamo(tableName, region, item, trys) {
+    trys = trys || 1;
+    Dynamo_Put(tableName, item, region, (err, data) => {
+      if(!err) return;
+      console.log(`brcap-utils logDynamo falhou na ${trys} tentativa.`, `tableName:${tableName}`, `region:${region}`, `item:`, item);
+      if(trys >= 3) return;
+      setTimeout(() => {
+        Log.logDynamo(tableName, region, item, ++trys);
+      }, 500);
+    });
   }
 }
 
