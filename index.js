@@ -7,6 +7,7 @@ const ValidadorDTO = require('./dto/ValidadorDTO');
 const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
 const BRMath = require('./util/Math');
+const sequelizePaginate = require('./util/SequelizeTools').paginate;
 /**
  * Função responsável pela validação de CPF.
  * Retorna true se o CPF é válido e false se CPF é inválido.
@@ -255,6 +256,17 @@ function buscaBancoFebraban(tableName, region, callback) {
  * @param {integer} decimals (opcinal, default 2)
  */
 
+// sequelizePaginate
+/**
+ * Paginação para Sequelize (raw = true, forçado)
+ * @param {object} model    Model Sequelize
+ * @param {object} options  Sequilize Options
+ * @param {number} limit    Limite de resultados por pagina
+ * @param {number} page     Pagina desejada, se null === 1
+ * @param {object} [req]    Opcional, objeto req do Express, se informado retorna actualPageLink, nextPagelink, previousPageLink
+ * @returns {Promise}
+ */
+
 module.exports = {
   cpfEhValido,
   limpaCPF,
@@ -269,4 +281,5 @@ module.exports = {
   isCnpjValido,
   Log,
   BRMath,
+  sequelizePaginate,
 };
