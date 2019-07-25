@@ -1,27 +1,25 @@
 /**
- * Classe responsável pela listagem dos bancos da Febraban 
+ * Classe responsável pela listagem dos bancos da Febraban
  * */
-var AWS = require('aws-sdk');
-AWS.config.update({region: 'sa-east-1'});
+let AWS = require('aws-sdk');
+
+AWS.config.update({ region: 'sa-east-1' });
 
 module.exports = class BancosFebraban {
-
-
-    static buscaBancoFebraban(){
-        return (items);
-    }
-}
+  static buscaBancoFebraban() {
+    return (items);
+  }
+};
 
 function buscaBancoFebraban(tableName, region, callback) {
-
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var params = {
-            TableName: tableName,
-            region: region
-    };
-    var items = []
-    var scanExecute = function(callback) {
-        docClient.scan(params,function(err,result) {
+  let docClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: tableName,
+    region,
+  };
+  let items = [];
+  var scanExecute = function (callback) {
+    docClient.scan(params, (err,result) => {
             if(err) {
                callback(err);
             } else {
@@ -35,8 +33,6 @@ function buscaBancoFebraban(tableName, region, callback) {
                 }
             }
         });
-    }
-    scanExecute(callback);
-};
-
-
+  };
+  scanExecute(callback);
+}

@@ -1,127 +1,108 @@
-var Validator = require('jsonschema').Validator;
-var fs = require('fs')
-var validator = new Validator();
+let { Validator } = require('jsonschema');
+let fs = require('fs');
 
-const BUCKET_SCHEMA = "brasilcap-schema-agreement";
-const UTF_8 = "utf8";
+let validator = new Validator();
+
+const BUCKET_SCHEMA = 'brasilcap-schema-agreement';
+const UTF_8 = 'utf8';
 
 module.exports = class validadorJSON {
-
-    /** valida json sqs 
+  /** valida json sqs
      * @param  {json} schema
      * @param  {json} payload
      * @param  {callback} callback
      */
-    static validateSchemaSqs(schema,payload, callback) {
+  static validateSchemaSqs(schema, payload, callback) {
+    let listValidacao = validarRequestSchemaSqs(schema, payload);
+    if (listValidacao.length == 0) {
+      validateJsonSchema(schema, payload, (erro, resultado) => {
+        callback(erro, resultado);
+      });
+    } else {
+      callback(listValidacao, null);
+    }
+  }
 
-        var listValidacao = validarRequestSchemaSqs(schema,payload);
-        if(listValidacao.length == 0){
-            validateJsonSchema(schema,payload, function (erro, resultado) {
-                callback(erro, resultado);
-            });
-        }else{
-            callback(listValidacao,null );
-        }
-        
-       
-    };
 
- 
- 
-    /**  validar payload service
+  /**  validar payload service
      * @param  {} schema
      * @param  {} payload
      * @param  {} resource
      * @param  {} httpMethod
      * @param  {} callback
      */
-    static validateSchemaService(schema,payload, resource,httpMethod, callback) {
-
-        var listValidacao = validarValidateSchemaService(schema,payload, resource,httpMethod);
-          if(listValidacao.length == 0){
-            validarArquivo(schema,payload, resource,httpMethod, function (erro, resultado) {
-                callback(erro, resultado);
-            });
-        }else{
-            callback(listValidacao,null );
-        }
-
-       
-    };
-}
-
-
-function validarArquivo(schema,payload, resource,httpMethod,callback) {
-
-    if (schema) {
-        var schemaValidation = JSON.parse(schema.Body.toString(UTF_8))[resource][httpMethod];
-        
-        if (schemaValidation) {
-            validateJsonSchema(payload, schemaValidation, function (erro, resultado) {
-
-                callback(erro, resultado);
-            });
-        } else {
-            throw new Error('Configuração não encontrada.');
-        }
-
+  static validateSchemaService(schema, payload, resource, httpMethod, callback) {
+    let listValidacao = validarValidateSchemaService(schema, payload, resource, httpMethod);
+    if (listValidacao.length == 0) {
+      validarArquivo(schema, payload, resource, httpMethod, (erro, resultado) => {
+        callback(erro, resultado);
+      });
     } else {
-        callback(erro, null);
+      callback(listValidacao, null);
     }
+  }
+};
 
+
+function validarArquivo(schema, payload, resource, httpMethod, callback) {
+  if (schema) {
+    let schemaValidation = JSON.parse(schema.Body.toString(UTF_8))[resource][httpMethod];
+
+    if (schemaValidation) {
+      validateJsonSchema(payload, schemaValidation, (erro, resultado) => {
+        callback(erro, resultado);
+      });
+    } else {
+      throw new Error('Configuração não encontrada.');
+    }
+  } else {
+    callback(erro, null);
+  }
 }
 
 
 function validateJsonSchema(schema, payload, callback) {
+  if (validator.validate(payload, schema).errors.length > 0) {
+    let listaErros = validator.validate(payload, schema).errors;
 
-    if (validator.validate(payload, schema).errors.length > 0) {
-
-        var listaErros = validator.validate(payload, schema).errors;
-
-        try {
-            const error = listaErros.map(
-                error => error.schema.message[error.name]
-            )
-            callback(error,null);
-        } catch (error) {
-            console.log('Erro ao recuperar lista de mensagem ', error);
-            callback(listaErros,null );
-        }
-
-    } else {
-        callback(null, []);
+    try {
+      const error = listaErros.map(
+        error => error.schema.message[error.name],
+      );
+      callback(error, null);
+    } catch (error) {
+      console.log('Erro ao recuperar lista de mensagem ', error);
+      callback(listaErros, null);
     }
+  } else {
+    callback(null, []);
+  }
 }
 
-function validarValidateSchemaService(schema,payload, resource,httpMethod){
-    var message = [];
-    return message.concat(validaNotEmpty(schema),
-                   validaNotEmpty(payload),
-                   validaNotEmpty(resource),
-                   validaNotEmpty(httpMethod));
- 
-};
+function validarValidateSchemaService(schema, payload, resource, httpMethod) {
+  let message = [];
+  return message.concat(validaNotEmpty(schema),
+    validaNotEmpty(payload),
+    validaNotEmpty(resource),
+    validaNotEmpty(httpMethod));
+}
 
 
-
-function validarRequestSchemaSqs(schema,payload){
-    var message = [];
-    return message.concat(validaNotEmpty(schema),
-            validaNotEmpty(payload));
- };
-
-
+function validarRequestSchemaSqs(schema, payload) {
+  let message = [];
+  return message.concat(validaNotEmpty(schema),
+    validaNotEmpty(payload));
+}
 
 
 function validaNotEmpty(schema) {
-     msg = [];
+  msg = [];
 
-    if (!schema) {
-        const varToString = schema => Object.keys(schema)[0];
-        const displayName = varToString({schema})
-        msg.push({campo: displayName, mensagem:'não informado.'});
-       
-    }
+  if (!schema) {
+    const varToString = schema => Object.keys(schema)[0];
+    const displayName = varToString({ schema });
+    msg.push({ campo: displayName, mensagem: 'não informado.' });
+  }
 
-    return msg;
-};
+  return msg;
+}
