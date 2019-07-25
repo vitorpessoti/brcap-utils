@@ -259,11 +259,12 @@ function buscaBancoFebraban(tableName, region, callback) {
 // sequelizePaginate
 /**
  * Paginação para Sequelize (raw = true, forçado)
- * @param {object} model    Model Sequelize
- * @param {object} options  Sequilize Options
- * @param {number} limit    Limite de resultados por pagina
- * @param {number} page     Pagina desejada, se null === 1
- * @param {object} [req]    Opcional, objeto req do Express, se informado retorna actualPageLink, nextPagelink, previousPageLink
+ * @param {object} sequilize  Sequelize
+ * @param {object} model      Model Sequelize
+ * @param {object} options    Sequilize Options
+ * @param {number} limit      Limite de resultados por pagina
+ * @param {number} page       Pagina desejada, se null === 1
+ * @param {object} [req]      Opcional, objeto req do Express, se informado retorna currentPageLink, nextPagelink, previousPageLink
  * @returns {Promise}
  */
 
