@@ -75,6 +75,12 @@ module.exports = {
           delete (success.previousPage);
           delete (success.previousPageURL);
         }
+        if (!total) {
+          delete (success.currentPage);
+          delete (success.currentPageURL);
+          delete (success.firstPageURL);
+          delete (success.lastPageURL);
+        }
         resolve(success);
       } catch (error) {
         reject(error);
