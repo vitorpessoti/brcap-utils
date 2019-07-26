@@ -12,8 +12,11 @@ module.exports = {
   paginate: (sequelize, model, options, limit, page, req) => new Promise((resolve, reject) => {
     (async () => {
       try {
+        let logging = sequelize.options && typeof sequelize.options.logging === 'function' ? sequelize.options.logging : false;
+        logging = options.logging && typeof options.logging === 'function' ? options.logging : logging;
         let totalQuery;
         const getQuery = (sql) => {
+          if (logging) logging(sql);
           totalQuery = sql.replace(/Executing\s\(default\):\s|LIMIT[^;]+|\s;|;/g, '');
           totalQuery = `SELECT COUNT(*) AS TOTAL FROM (${totalQuery}) AS GRPS`;
         };
@@ -42,7 +45,8 @@ module.exports = {
         if (req) {
           const requestedUrl = `${req.protocol}://${req.get('Host')}${req.url}`;
           currentPageURL = requestedUrl;
-          if (!/page=/g.test(requestedUrl)) currentPageURL += `page=${currentPage}`;
+          if (!/\?/g.test(requestedUrl)) currentPageURL += '?';
+          if (!/&page=|\?page=/g.test(requestedUrl)) currentPageURL += `&page=${currentPage}`;
           currentPageURL = currentPageURL.replace(/page=[\d]+/g, `page=${currentPage}`);
           nextPageURL = currentPageURL.replace(/page=[\d]+/g, `page=${nextPage}`);
           previousPageURL = currentPageURL.replace(/page=[\d]+/g, `page=${previousPage}`);
