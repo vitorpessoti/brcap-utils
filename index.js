@@ -8,6 +8,9 @@ const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
 const BRMath = require('./util/Math');
 const sequelizePaginate = require('./util/SequelizeTools').paginate;
+const getProp = require('./util/getProp');
+
+
 /**
  * Função responsável pela validação de CPF.
  * Retorna true se o CPF é válido e false se CPF é inválido.
@@ -280,6 +283,7 @@ module.exports = {
   validaNumeric,
   buscaBancoFebraban,
   isCnpjValido,
+  getProp,
   Log,
   BRMath,
   sequelizePaginate,

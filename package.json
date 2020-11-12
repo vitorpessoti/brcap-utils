@@ -14,11 +14,12 @@
   },
   "dependencies": {
     "brcap-aws": "^1.4.11",
-    "jsonschema": "^1.2.4",
-    "moment": "^2.22.2",
-    "moment-business-days": "^1.0.6",
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "fast-memoize": "^2.5.2",
+    "jsonschema": "^1.2.4",
+    "moment": "^2.22.2",
+    "moment-business-days": "^1.0.6"
   }
 }
