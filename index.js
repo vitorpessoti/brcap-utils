@@ -3,6 +3,7 @@ const ValidadorCPF = require('./util/validadorCPF.js');
 const ValidadorCNPJ = require('./util/validadorCNPJ');
 const validadorJSON = require('./util/validadorJSON.js');
 const DiaUtil = require('./util/diaUtil.js');
+const GetDataLocal = require('./util/getDataLocal');
 const ValidadorDTO = require('./dto/ValidadorDTO');
 const BancosFebraban = require('./util/bancosFebraban.js');
 const Log = require('./util/Log');
@@ -271,6 +272,10 @@ function buscaBancoFebraban(tableName, region, callback) {
  * @returns {Promise}
  */
 
+ function getDataLocal(dateFormat){
+  return GetDataLocal.getDataLocal(dateFormat)
+ }
+
 module.exports = {
   cpfEhValido,
   limpaCPF,
@@ -287,4 +292,5 @@ module.exports = {
   Log,
   BRMath,
   sequelizePaginate,
+  getDataLocal
 };
