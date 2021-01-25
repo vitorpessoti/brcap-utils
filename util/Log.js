@@ -28,7 +28,7 @@ class Log {
     let hora = ("00" + data.getHours()).slice(-2)
     let minutos = ("00" + data.getMinutes()).slice(-2)
     let segundos = ("00" + data.getSeconds()).slice(-2)
-    return `${ano}-${mes}-${dia}T${hora}:${minutos}:${segundos} GMT-03:00`;
+    return `${ano}-${mes}-${dia}T${hora}:${minutos}:${segundos} `;
   }
 
   build(type) {
