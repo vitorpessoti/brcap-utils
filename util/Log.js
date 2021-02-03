@@ -23,7 +23,7 @@ class Log {
   static getDate() {
     let data = new Date();
     let ano = data.getFullYear();
-    let mes = ("00" + data.getMonth() + 1).slice(-2)
+    let mes = ("00" + (data.getMonth() + 1)).slice(-2)
     let dia = ("00" + data.getDay()).slice(-2)
     let hora = ("00" + data.getHours()).slice(-2)
     let minutos = ("00" + data.getMinutes()).slice(-2)
