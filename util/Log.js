@@ -21,7 +21,14 @@ class Log {
   }
 
   static getDate() {
-    return new Date().toISOString().replace(/T/g, ' ').replace(/Z/g, '');
+    let data = new Date();
+    let ano = data.getFullYear();
+    let mes = ("00" + data.getMonth() + 1).slice(-2)
+    let dia = ("00" + data.getDay()).slice(-2)
+    let hora = ("00" + data.getHours()).slice(-2)
+    let minutos = ("00" + data.getMinutes()).slice(-2)
+    let segundos = ("00" + data.getSeconds()).slice(-2)
+    return `${ano}-${mes}-${dia}T${hora}:${minutos}:${segundos} `;
   }
 
   build(type) {
