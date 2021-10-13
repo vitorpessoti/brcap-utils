@@ -10,6 +10,7 @@ const Log = require('./util/Log');
 const BRMath = require('./util/Math');
 const sequelizePaginate = require('./util/SequelizeTools').paginate;
 const getProp = require('./util/getProp');
+const aws = require('brcap-aws');
 
 
 /**
@@ -276,6 +277,14 @@ function buscaBancoFebraban(tableName, region, callback) {
   return GetDataLocal.getDataLocal(dateFormat)
  }
 
+ const getCryptedDbProperties = async (fn, dev = true) => {
+  const bucket = dev ? 'brasilcap-properties-dev' : 'brasilcap-properties-prd'
+  aws.S3_Get(bucket, 'capitalizacao_db.enc', (err, result) => {
+      if (err) fn({body: null, region: null, err})
+      fn({body: result.Body, region: 'sa-east-1', err: ''})
+  });
+}
+
 module.exports = {
   cpfEhValido,
   limpaCPF,
@@ -292,5 +301,6 @@ module.exports = {
   Log,
   BRMath,
   sequelizePaginate,
-  getDataLocal
+  getDataLocal,
+  getCryptedDbProperties
 };
