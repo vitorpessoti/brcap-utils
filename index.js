@@ -273,17 +273,25 @@ function buscaBancoFebraban(tableName, region, callback) {
  * @returns {Promise}
  */
 
- function getDataLocal(dateFormat){
+function getDataLocal(dateFormat) {
   return GetDataLocal.getDataLocal(dateFormat)
- }
-
- const getCryptedDbProperties = async (fn, dev = true) => {
-  const bucket = dev ? 'brasilcap-properties-dev' : 'brasilcap-properties-prd'
-  aws.S3_Get(bucket, 'capitalizacao_db.enc', (err, result) => {
-      if (err) fn({body: null, region: null, err})
-      fn({body: result.Body, region: 'sa-east-1', err: ''})
-  });
 }
+
+const getCryptedDbProperties = async (fn, dev = true) => {
+  const bucket = dev ? 'brasilcap-properties-dev' : 'brasilcap-properties-prd'
+  return new Promise((resolve, reject) => {
+    aws.S3_Get(bucket, 'capitalizacao_db.enc', (err, result) => (err ? reject({ body: null, region: null, err }) : resolve({ body: result.Body, region: 'sa-east-1', err: '' })))
+  })
+}
+
+const kmsDecrypt = (data) => {
+  return new Promise(
+    (resolve, reject) => aws.Kms_decrypt(data.body, data.region,
+      (error, sucess) => error ? reject(error) : resolve(JSON.parse(sucess))
+    )
+  );
+}
+
 
 module.exports = {
   cpfEhValido,
@@ -302,5 +310,6 @@ module.exports = {
   BRMath,
   sequelizePaginate,
   getDataLocal,
-  getCryptedDbProperties
+  getCryptedDbProperties,
+  kmsDecrypt
 };

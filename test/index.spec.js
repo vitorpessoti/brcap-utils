@@ -15,13 +15,24 @@ describe('Index', function () {
     });
 
     describe('getCryptedDbProperties', () => {
-        it('Deve retornar um objeto valido contendo os campos, body, region e err', () => {
-            Util.getCryptedDbProperties((value) => {
-                const { body, region, err } = value
-                expect(Buffer.isBuffer(body)).to.be.ok
-                expect(region).to.be.equal('sa-east-1')
-                expect(err).to.be.equal('')
-            })
+        it('Deve retornar um objeto valido contendo os campos, body, region e err', async () => {
+            const { body, region, err } = await Util.getCryptedDbProperties()
+            expect(Buffer.isBuffer(body)).to.be.ok
+            expect(region).to.be.equal('sa-east-1')
+            expect(err).to.be.equal('')
+        })
+    })
+    
+    describe('kmsDecrypt', () => {
+        it('Deve descriptografar o body retornado pela funcao getCryptedDbProperties', async() => {
+            const decryptedData = await Util.kmsDecrypt(await Util.getCryptedDbProperties())
+            expect(decryptedData.key).to.be.not.null
+            expect(decryptedData.dbName).to.be.not.null
+            expect(decryptedData.dbUser).to.be.not.null
+            expect(decryptedData.dbPassword).to.be.not.null
+            expect(decryptedData.dbPort).to.be.not.null
+            expect(decryptedData.dbDialect).to.be.not.null
+            expect(decryptedData.dbHost).to.be.not.null
         })
     })
 });
