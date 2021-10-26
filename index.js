@@ -277,10 +277,9 @@ function getDataLocal(dateFormat) {
   return GetDataLocal.getDataLocal(dateFormat)
 }
 
-const getCryptedDbProperties = async (fn, dev = true) => {
-  const bucket = dev ? 'brasilcap-properties-dev' : 'brasilcap-properties-prd'
+const getCryptedDbProperties = async (bucket, key) => {
   return new Promise((resolve, reject) => {
-    aws.S3_Get(bucket, 'capitalizacao_db.enc', (err, result) => (err ? reject({ body: null, region: null, err }) : resolve({ body: result.Body, region: 'sa-east-1', err: '' })))
+    aws.S3_Get(bucket, key, (err, result) => (err ? reject({ body: null, region: null, err }) : resolve({ body: result.Body, region: 'sa-east-1', err: '' })))
   })
 }
 

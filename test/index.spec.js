@@ -16,16 +16,16 @@ describe('Index', function () {
 
     describe('getCryptedDbProperties', () => {
         it('Deve retornar um objeto valido contendo os campos, body, region e err', async () => {
-            const { body, region, err } = await Util.getCryptedDbProperties()
+            const { body, region, err } = await Util.getCryptedDbProperties('brasilcap-properties-dev', 'capitalizacao_db.enc')
             expect(Buffer.isBuffer(body)).to.be.ok
             expect(region).to.be.equal('sa-east-1')
             expect(err).to.be.equal('')
         })
     })
-    
+
     describe('kmsDecrypt', () => {
         it('Deve descriptografar o body retornado pela funcao getCryptedDbProperties', async() => {
-            const decryptedData = await Util.kmsDecrypt(await Util.getCryptedDbProperties())
+            const decryptedData = await Util.kmsDecrypt(await Util.getCryptedDbProperties('brasilcap-properties-dev', 'capitalizacao_db.enc'))
             expect(decryptedData.key).to.be.not.null
             expect(decryptedData.dbName).to.be.not.null
             expect(decryptedData.dbUser).to.be.not.null
