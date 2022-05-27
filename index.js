@@ -11,7 +11,7 @@ const BRMath = require('./util/Math');
 const sequelizePaginate = require('./util/SequelizeTools').paginate;
 const getProp = require('./util/getProp');
 const aws = require('brcap-aws');
-
+const Boleto = require('./util/boleto-bb/lib/boleto');
 
 /**
  * Função responsável pela validação de CPF.
@@ -310,5 +310,6 @@ module.exports = {
   sequelizePaginate,
   getDataLocal,
   getCryptedDbProperties,
-  kmsDecrypt
+  kmsDecrypt,
+  Boleto
 };

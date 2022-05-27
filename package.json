@@ -13,6 +13,7 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
+    "boleto-bb": "^1.1.6",
     "brcap-aws": "^1.4.11",
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
